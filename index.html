@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Notes - Digital Note Taking</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="container">
+        <!-- Home View -->
+        <div class="home-view active" id="homeView">
+            <div class="main-content">
+                <div class="image-section">
+                    <div class="image-frame">
+                        <img src="image.png" alt="Digital Note Taking">
+                    </div>
+                    <div class="button-container">
+                        <button class="cta-button" id="newNoteMainBtn">
+                            <i class="fas fa-plus"></i> New Note
+                        </button>
+                        <button class="cta-button" id="viewNotesMainBtn">
+                            <i class="fas fa-list"></i> View Notes
+                        </button>
+                        <button class="cta-button" id="removeAllNotesBtn">
+                            <i class="fas fa-trash"></i> Remove All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="content-section">
+                    <h2>Digital Note Taking Made Simple</h2>
+                    <p>Online notes are a convenient way to store, organize, and access important information digitally.
+                        They allow users to write and save notes anytime using a phone, tablet, or computer, making
+                        studying
+                        and reviewing easier and more flexible.</p>
+                    <p>Online notes can be updated quickly, shared with others, and backed up automatically, which helps
+                        prevent loss of information. Because everything is stored in one place, it becomes easier to
+                        manage
+                        lessons, reminders, and ideas efficiently.</p>
+                </div>
+            </div>
+
+            <!-- Saved Notes Section -->
+            <div class="saved-notes-section" id="savedNotesSection">
+                <h2><i class="fas fa-book"></i> My Saved Notes</h2>
+                <div class="notes-grid" id="notesGrid">
+                    <!-- Notes will be dynamically added here -->
+                    <div class="no-notes-message" id="noNotesMessage">
+                        <i class="fas fa-sticky-note"></i>
+                        <p>You don't have any saved notes yet. Create your first note!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Note Taking Panel (Initially Hidden) -->
+        <div class="note-panel" id="notePanel">
+            <div class="panel-header">
+                <h2><i class="fas fa-edit"></i> Note Editor</h2>
+                <div class="header-actions">
+                    <button class="back-btn" id="backHomeBtn" title="Back to Home">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </button>
+                    <button class="close-btn" id="closePanelBtn" title="Close">
+
+                    </button>
+                </div>
+            </div>
+
+            <div class="note-controls">
+                <button class="nav-btn" id="prevNoteBtn">
+                    <i class="fas fa-arrow-left"></i> Previous
+                </button>
+
+                <div class="note-counter">
+                    <span id="currentNoteNum">1</span> / <span id="totalNotes">0</span>
+                </div>
+
+                <button class="nav-btn" id="nextNoteBtn">
+                    Next <i class="fas fa-arrow-right"></i>
+                </button>
+
+                <button class="action-btn new-btn" id="newNoteBtn">
+                    <i class="fas fa-plus"></i> New Note
+                </button>
+            </div>
+
+            <div class="note-editor">
+                <div class="note-form">
+                    <input type="text" id="noteTitle" placeholder="Note Title" class="title-input">
+
+                    <div class="note-image-upload">
+                        <div class="note-image-frame" id="noteImageFrame">
+                            <i class="fas fa-image"></i>
+                            <p>Click to upload note image</p>
+                        </div>
+                        <input type="file" id="noteImageInput" accept="image/*" style="display: none;">
+                    </div>
+
+                    <textarea id="noteContent" placeholder="Start typing your note here..."
+                        class="content-textarea"></textarea>
+
+                    <div class="form-actions">
+                        <button class="action-btn save-btn" id="saveNoteBtn">
+                            <i class="fas fa-save"></i> Save Note
+                        </button>
+                        <button class="action-btn edit-btn" id="editNoteBtn">
+                            <i class="fas fa-edit"></i> Edit
+                        </button>
+                        <button class="action-btn delete-btn" id="deleteNoteBtn">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+
+                <div class="notes-list">
+                    <h3><i class="fas fa-list"></i> All Notes</h3>
+                    <div id="notesListContainer">
+                        <!-- Notes will be dynamically inserted here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
