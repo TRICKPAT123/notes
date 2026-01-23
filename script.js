@@ -116,12 +116,42 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleImageUpload(event) {
         const file = event.target.files[0];
         if (file) {
+            // Check file size
+            if (file.size > 2 * 1024 * 1024) {
+                alert('⚠️ Image is too large (max 2MB). Please choose a smaller image.');
+                return;
+            }
+            
             const reader = new FileReader();
             reader.onload = function(e) {
-                const imageData = e.target.result;
-                noteImageFrame.innerHTML = `<img src="${imageData}" alt="Note Image">`;
-                noteImageFrame.classList.add('has-image');
-                noteImageFrame.dataset.imageUrl = imageData;
+                // Compress image before storing
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    
+                    // Calculate new size (max 800px width)
+                    let width = img.width;
+                    let height = img.height;
+                    const maxWidth = 800;
+                    
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                    
+                    canvas.width = width;
+                    canvas.height = height;
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    // Compress to JPEG (better compression)
+                    const compressedImageData = canvas.toDataURL('image/jpeg', 0.7);
+                    
+                    noteImageFrame.innerHTML = `<img src="${compressedImageData}" alt="Note Image">`;
+                    noteImageFrame.classList.add('has-image');
+                    noteImageFrame.dataset.imageUrl = compressedImageData;
+                };
+                img.src = e.target.result;
             };
             reader.readAsDataURL(file);
         }
