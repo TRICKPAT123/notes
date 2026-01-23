@@ -117,8 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const file = event.target.files[0];
         if (file) {
             // Check file size
-            if (file.size > 2 * 1024 * 1024) {
-                alert('⚠️ Image is too large (max 2MB). Please choose a smaller image.');
+            if (file.size > 10 * 1024 * 1024) {
+                alert('⚠️ Image is too large (max 10MB). Please choose a smaller image.');
                 return;
             }
             
