@@ -19,6 +19,272 @@ body {
     background-image: none;
 }
 
+/* Login Modal Styles */
+.login-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    backdrop-filter: blur(5px);
+}
+
+.login-modal.hidden {
+    display: none;
+}
+
+.login-container {
+    background: white;
+    border-radius: 15px;
+    padding: clamp(30px, 8vw, 50px);
+    width: clamp(300px, 90vw, 450px);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease-out;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header h2 {
+    color: #016dd9;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    margin-bottom: 10px;
+}
+
+.login-header p {
+    color: #666;
+    font-size: 0.95rem;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.key-input {
+    padding: clamp(12px, 3vw, 15px);
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.key-input:focus {
+    outline: none;
+    border-color: #016dd9;
+    background-color: #f0f7ff;
+    box-shadow: 0 0 0 3px rgba(1, 109, 217, 0.1);
+}
+
+.login-btn {
+    padding: clamp(12px, 3vw, 15px);
+    background-color: #016dd9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background-color: #0155a8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(1, 109, 217, 0.3);
+}
+
+.login-btn:active {
+    transform: translateY(0);
+}
+
+.login-footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 10px;
+}
+
+.login-footer a {
+    color: #016dd9;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Developer Modal Styles */
+.dev-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9998;
+    backdrop-filter: blur(5px);
+}
+
+.dev-modal.hidden {
+    display: none !important;
+}
+
+.dev-container {
+    background: white;
+    border-radius: 15px;
+    padding: clamp(30px, 8vw, 40px);
+    width: clamp(300px, 90vw, 600px);
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.4s ease-out;
+}
+
+.dev-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.dev-header h2 {
+    color: #016dd9;
+    font-size: clamp(1.5rem, 4vw, 1.8rem);
+    margin: 0;
+}
+
+.dev-close {
+    background: none;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+    color: #999;
+    padding: 0;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.3s ease;
+}
+
+.dev-close:hover {
+    color: #016dd9;
+}
+
+.dev-content {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dev-section {
+    padding: 15px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    border-left: 4px solid #016dd9;
+}
+
+.dev-section h3 {
+    color: #016dd9;
+    font-size: 1rem;
+    margin-bottom: 12px;
+}
+
+.dev-btn {
+    padding: 10px 20px;
+    background-color: #016dd9;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    width: 100%;
+}
+
+.dev-btn:hover {
+    background-color: #0155a8;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(1, 109, 217, 0.3);
+}
+
+.dev-btn.delete-btn {
+    background-color: #dc3545;
+}
+
+.dev-btn.delete-btn:hover {
+    background-color: #c82333;
+}
+
+.generated-key {
+    margin-top: 12px;
+    padding: 12px;
+    background: white;
+    border: 2px solid #016dd9;
+    border-radius: 6px;
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    color: #016dd9;
+}
+
+.keys-list {
+    list-style: none;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.keys-list li {
+    padding: 10px;
+    background: white;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    border-left: 3px solid #28a745;
+    word-break: break-all;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#container {
+    display: none;
+}
+
+#container.authenticated {
+    display: flex;
+}
+
 .container {
     width: 100%;
     overflow-y: auto;
@@ -250,7 +516,7 @@ button:hover {
 
 @media (max-width: 768px) {
     button {
-        margin-left: 100px;
+        margin-left: 80px;
     }
 }
 
@@ -371,7 +637,8 @@ button:hover {
 
 .nav-btn,
 .action-btn {
-    padding: 8px 15px;
+    padding: 10px 20px;
+    margin: 0;
     border: 2px solid #5f88b1;
     background: transparent;
     border-radius: 4px;
@@ -382,7 +649,12 @@ button:hover {
     -webkit-animation: jello-horizontal 0.9s both;
     animation: jello-horizontal 0.9s both;
     outline: none;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
 
 .nav-btn:hover,
 .action-btn:hover {
@@ -861,6 +1133,20 @@ button:hover {
 }
 
 @media (max-width: 768px) {
+    .note-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        transform: none;
+        border-radius: 0;
+        height: 100vh;
+    }
+
     .note-popup {
         bottom: auto;
         right: auto;
@@ -882,6 +1168,19 @@ button:hover {
     .map-controls .action-btn {
         min-width: 100%;
         max-width: 300px;
+    }
+
+    .map-panel {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        transform: none;
+        border-radius: 0;
     }
 }
 
@@ -941,7 +1240,7 @@ button {
 
 @media (max-width: 480px) {
     body {
-        padding: 0;
+        padding-right: 0;
     }
 
     .container {
@@ -997,6 +1296,13 @@ button {
         gap: 12px;
     }
 
+    .note-panel {
+        width: 100%;
+        height: 100%;
+        max-height: 100vh;
+        overflow-y: auto;
+    }
+
     .panel-header {
         padding: 15px;
         flex-wrap: wrap;
@@ -1005,17 +1311,40 @@ button {
     .panel-header h2 {
         flex: 1;
         min-width: 200px;
+        font-size: 1.3rem;
     }
 
     .note-controls {
         padding: 10px 15px;
+        flex-wrap: wrap;
+        gap: 8px;
     }
 
     .nav-btn,
     .action-btn {
         flex: 1;
-        min-width: 60px;
+        min-width: 80px;
         text-align: center;
+        font-size: 0.85rem;
+        padding: 10px 12px;
+        min-height: 40px;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .note-editor {
+        flex-direction: column;
+    }
+
+    .notes-list {
+        flex: 1;
+        min-height: 200px;
+        border-left: none;
+        border-top: 1px solid #ddd;
+        max-height: 300px;
+        width: 100%;
     }
 
     .form-actions {
@@ -1024,6 +1353,15 @@ button {
 
     .action-btn {
         width: 100%;
+    }
+
+    .note-form {
+        padding: 15px;
+    }
+
+    .map-panel {
+        width: 100%;
+        height: 100%;
     }
 }
 
@@ -1048,9 +1386,28 @@ button {
         font-size: 1rem;
     }
 
+    .panel-header {
+        padding: 10px;
+    }
+
     .nav-btn,
     .action-btn {
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         padding: 6px 8px;
+    }
+
+    .note-controls {
+        padding: 8px 10px;
+        gap: 5px;
+    }
+
+    .note-form {
+        padding: 10px;
+    }
+
+    .title-input,
+    .content-textarea {
+        padding: 8px 10px;
+        font-size: 0.9rem;
     }
 }

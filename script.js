@@ -131,16 +131,9 @@ document.addEventListener('DOMContentLoaded', function() {
     function showNotePopup(note, index) {
         document.getElementById('popupTitle').textContent = note.title;
         document.getElementById('popupContent').textContent = note.content;
-        
-        // Clear location if it doesn't exist
         if (note.location) {
             document.getElementById('popupLocation').textContent = `📍 ${note.location.lat.toFixed(4)}, ${note.location.lng.toFixed(4)}`;
-        } else {
-            document.getElementById('popupLocation').textContent = '';
         }
-        
-        // Format and display date/time
-        let dateElement = document.getElementById('popupDate');
         if (note.createdAt) {
             const date = new Date(note.createdAt);
             const dateString = date.toLocaleDateString('en-US', { 
@@ -150,16 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 hour: '2-digit', 
                 minute: '2-digit' 
             });
-            dateElement.textContent = `📅 Created: ${dateString}`;
-            dateElement.style.display = 'block';
-        } else if (note.date) {
-            dateElement.textContent = `📅 Created: ${note.date}`;
-            dateElement.style.display = 'block';
-        } else {
-            dateElement.textContent = '';
-            dateElement.style.display = 'none';
+            document.getElementById('popupDate').textContent = `📅 Created: ${dateString}`;
         }
-        
         document.getElementById('editPopupBtn').onclick = function() {
             currentNoteIndex = index;
             loadNote(index);
@@ -367,26 +352,27 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const imageUrl = noteImageFrame.dataset.imageUrl || null;
         
-        const note = {
-            id: Date.now(),
-            title,
-            content,
-            image: imageUrl,
-            date: new Date().toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'short',
-                day: 'numeric'
-            }),
-            createdAt: new Date().toISOString(),
-            timestamp: Date.now()
-        };
-        
         if (currentNoteIndex === -1) {
             // New note
+            const note = {
+                id: Date.now(),
+                title,
+                content,
+                image: imageUrl,
+                date: new Date().toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                }),
+                timestamp: Date.now()
+            };
             notes.unshift(note);
         } else {
-            // Update existing note
-            notes[currentNoteIndex] = note;
+            // Update existing note - preserve all existing properties
+            const existingNote = notes[currentNoteIndex];
+            existingNote.title = title;
+            existingNote.content = content;
+            existingNote.image = imageUrl;
         }
         
         // Save to localStorage
@@ -527,26 +513,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? `<img src="${note.image}" alt="${note.title}">`
                 : '<i class="fas fa-sticky-note"></i>';
             
-            // Format date and time
-            let dateDisplay = note.date || '';
-            if (note.createdAt) {
-                const date = new Date(note.createdAt);
-                dateDisplay = date.toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'short', 
-                    day: 'numeric', 
-                    hour: '2-digit', 
-                    minute: '2-digit'
-                });
-            }
-            
             noteCard.innerHTML = `
                 <div class="note-card-image">
                     ${imageHtml}
                 </div>
                 <div class="note-card-content">
                     <h3 class="note-card-title">${note.title}</h3>
-                    <div class="note-card-date">${dateDisplay}</div>
+                    <div class="note-card-date">${note.date}</div>
                 </div>
             `;
             
