@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Online Notes - Digital Note Taking</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
     <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -25,6 +26,9 @@
                         <button class="cta-button" id="viewNotesMainBtn">
                             <i class="fas fa-list"></i> View Notes
                         </button>
+                        <button class="cta-button" id="viewMapBtn">
+                            <i class="fas fa-map"></i> View Map
+                        </button>
                         <button class="cta-button" id="removeAllNotesBtn">
                             <i class="fas fa-trash"></i> Remove All
                         </button>
@@ -32,25 +36,23 @@
                 </div>
 
                 <div class="content-section">
-                    <h2>Digital Note Taking Made Simple</h2>
-                    <p>Online notes are a convenient way to store, organize, and access important information digitally.
-                        They allow users to write and save notes anytime using a phone, tablet, or computer, making
-                        studying
-                        and reviewing easier and more flexible.</p>
-                    <p>Online notes can be updated quickly, shared with others, and backed up automatically, which helps
-                        prevent loss of information. Because everything is stored in one place, it becomes easier to
-                        manage
-                        lessons, reminders, and ideas efficiently.</p>
+                    <h2>Notely Map - By Naes</h2>
+                    <p>This system allows you to take notes and pin them on a map. I created these notes for traveling,
+                        so you can place notes on specific locations. You can also add an image to each note.</p>
+                    <p>The system allows you to add notes or view the map; when you open the map, you can tap any
+                        location to add a note with a title and content, save it to My Notes on the home screen, edit
+                        it, and add an image, or you can also create a note directly from the New Note section without
+                        using the map.</p>
                 </div>
             </div>
 
             <!-- Saved Notes Section -->
             <div class="saved-notes-section" id="savedNotesSection">
-                <h2><i class="fas fa-book"></i> My Saved Notes</h2>
+                <h2> My Saved Notes</h2>
                 <div class="notes-grid" id="notesGrid">
                     <!-- Notes will be dynamically added here -->
                     <div class="no-notes-message" id="noNotesMessage">
-                        <i class="fas fa-sticky-note"></i>
+
                         <p>You don't have any saved notes yet. Create your first note!</p>
                     </div>
                 </div>
@@ -60,13 +62,10 @@
         <!-- Note Taking Panel (Initially Hidden) -->
         <div class="note-panel" id="notePanel">
             <div class="panel-header">
-                <h2><i class="fas fa-edit"></i> Note Editor</h2>
+                <h2>Note Editor</h2>
                 <div class="header-actions">
-                    <button class="back-btn" id="backHomeBtn" title="Back to Home">
+                    <button class="close-btn" id="closePanelBtn" title="Back to Home">
                         <i class="fas fa-arrow-left"></i> Back to Home
-                    </button>
-                    <button class="close-btn" id="closePanelBtn" title="Close">
-
                     </button>
                 </div>
             </div>
@@ -106,27 +105,65 @@
 
                     <div class="form-actions">
                         <button class="action-btn save-btn" id="saveNoteBtn">
-                            <i class="fas fa-save"></i> Save Note
+                            Save Note
                         </button>
                         <button class="action-btn edit-btn" id="editNoteBtn">
                             <i class="fas fa-edit"></i> Edit
                         </button>
                         <button class="action-btn delete-btn" id="deleteNoteBtn">
-                            <i class="fas fa-trash"></i> Delete
+                            Delete
                         </button>
                     </div>
                 </div>
 
-                <div class="notes-list">
-                    <h3><i class="fas fa-list"></i> All Notes</h3>
-                    <div id="notesListContainer">
-                        <!-- Notes will be dynamically inserted here -->
-                    </div>
+
+            </div>
+        </div>
+
+        <!-- Map View Panel (Initially Hidden) -->
+        <div class="map-panel" id="mapPanel">
+            <div class="panel-header">
+                <h2>Notes Map</h2>
+                <div class="header-actions">
+                    <button class="close-btn" id="closeMapBtn" title="Back to Home">
+                        <i class="fas fa-arrow-left"></i> Back to Home
+                    </button>
+                </div>
+            </div>
+
+            <div class="map-controls">
+                <button class="action-btn" id="currentLocationBtn" title="Go to your current location">
+                    <i class="fas fa-location-dot"></i> My Location
+                </button>
+                <button class="action-btn" id="addNoteMapBtn">
+                    <i class="fas fa-plus"></i> Add Note Here
+                </button>
+            </div>
+
+            <div id="map" style="width: 100%; height: calc(100vh - 200px);"></div>
+
+            <!-- Note Popup for Map -->
+            <div class="note-popup" id="notePopup" style="display: none;">
+                <h4 id="popupTitle"></h4>
+                <p id="popupContent"></p>
+                <p id="popupLocation" style="font-size: 0.85em; color: #666;"></p>
+                <p id="popupDate" style="font-size: 0.85em; color: #999;"></p>
+                <div class="popup-actions">
+                    <button class="popup-btn" id="editPopupBtn">Edit</button>
+                    <button class="popup-btn delete" id="deletePopupBtn">Delete</button>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2026 Notely Map. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of
+                Service</a></p>
+        <p>Created with <i class="fas fa-heart" style="color: #e74c3c;"></i> by Naes</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
     <script src="script.js"></script>
 </body>
 
