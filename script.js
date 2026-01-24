@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // DOM Elements
     const homeView = document.getElementById('homeView');
     const notePanel = document.getElementById('notePanel');
+    const mapPanel = document.getElementById('mapPanel');
     const notesGrid = document.getElementById('notesGrid');
     const noNotesMessage = document.getElementById('noNotesMessage');
     const notesListContainer = document.getElementById('notesListContainer');
@@ -9,9 +10,12 @@ document.addEventListener('DOMContentLoaded', function() {
     // Buttons
     const newNoteMainBtn = document.getElementById('newNoteMainBtn');
     const viewNotesMainBtn = document.getElementById('viewNotesMainBtn');
+    const viewMapBtn = document.getElementById('viewMapBtn');
     const removeAllNotesBtn = document.getElementById('removeAllNotesBtn');
-    const backHomeBtn = document.getElementById('backHomeBtn');
     const closePanelBtn = document.getElementById('closePanelBtn');
+    const closeMapBtn = document.getElementById('closeMapBtn');
+    const currentLocationBtn = document.getElementById('currentLocationBtn');
+    const addNoteMapBtn = document.getElementById('addNoteMapBtn');
     const newNoteBtn = document.getElementById('newNoteBtn');
     const saveNoteBtn = document.getElementById('saveNoteBtn');
     const deleteNoteBtn = document.getElementById('deleteNoteBtn');
@@ -27,10 +31,18 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentNoteNum = document.getElementById('currentNoteNum');
     const totalNotes = document.getElementById('totalNotes');
     
+    // Map Elements
+    const mapContainer = document.getElementById('map');
+    const notePopup = document.getElementById('notePopup');
+    
     // State - Load from localStorage
     let notes = [];
     let currentNoteIndex = -1;
     let isEditing = false;
+    let map = null;
+    let markers = {};
+    let currentLocationMarker = null;
+    let selectedLatLng = null;
     
     // Load notes from localStorage on page load
     function loadNotesFromStorage() {
@@ -62,12 +74,153 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize
     loadNotesFromStorage();
     
+    // Initialize Map
+    function initMap() {
+        if (map) return;
+        map = L.map('map').setView([37.7749, -122.4194], 19);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors',
+            maxZoom: 25
+        }).addTo(map);
+        map.on('click', function(e) {
+            selectedLatLng = e.latlng;
+            showAddNoteDialog(e.latlng);
+        });
+        loadMapMarkers();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                currentLocationMarker = L.circleMarker([lat, lng], {
+                    radius: 8,
+                    fillColor: "#2196F3",
+                    color: "#1976D2",
+                    weight: 2,
+                    opacity: 0.8,
+                    fillOpacity: 0.6
+                }).addTo(map).bindPopup('📍 Your Location');
+                map.setView([lat, lng], 19);
+            });
+        }
+    }
+    
+    function loadMapMarkers() {
+        Object.values(markers).forEach(marker => map.removeLayer(marker));
+        markers = {};
+        notes.forEach((note, index) => {
+            if (note.location) {
+                const lat = note.location.lat;
+                const lng = note.location.lng;
+                const marker = L.marker([lat, lng], {
+                    icon: L.icon({
+                        iconUrl: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%236A11CB" width="32" height="32"%3E%3Cpath d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z"/%3E%3C/svg%3E',
+                        iconSize: [32, 32],
+                        iconAnchor: [16, 32],
+                        popupAnchor: [0, -32]
+                    })
+                }).addTo(map);
+                marker.bindPopup(`<strong>${note.title}</strong><br><p style="font-size: 0.85em; white-space: pre-wrap; max-height: 200px; overflow-y: auto;">${note.content}</p>`);
+                marker.on('click', function() {
+                    showNotePopup(note, index);
+                });
+                markers[note.id] = marker;
+            }
+        });
+    }
+    
+    function showNotePopup(note, index) {
+        document.getElementById('popupTitle').textContent = note.title;
+        document.getElementById('popupContent').textContent = note.content;
+        
+        // Clear location if it doesn't exist
+        if (note.location) {
+            document.getElementById('popupLocation').textContent = `📍 ${note.location.lat.toFixed(4)}, ${note.location.lng.toFixed(4)}`;
+        } else {
+            document.getElementById('popupLocation').textContent = '';
+        }
+        
+        // Format and display date/time
+        let dateElement = document.getElementById('popupDate');
+        if (note.createdAt) {
+            const date = new Date(note.createdAt);
+            const dateString = date.toLocaleDateString('en-US', { 
+                year: 'numeric', 
+                month: 'short', 
+                day: 'numeric', 
+                hour: '2-digit', 
+                minute: '2-digit' 
+            });
+            dateElement.textContent = `📅 Created: ${dateString}`;
+            dateElement.style.display = 'block';
+        } else if (note.date) {
+            dateElement.textContent = `📅 Created: ${note.date}`;
+            dateElement.style.display = 'block';
+        } else {
+            dateElement.textContent = '';
+            dateElement.style.display = 'none';
+        }
+        
+        document.getElementById('editPopupBtn').onclick = function() {
+            currentNoteIndex = index;
+            loadNote(index);
+            showNotePanel();
+        };
+        document.getElementById('deletePopupBtn').onclick = function() {
+            if (confirm('Delete this note?')) {
+                notes.splice(index, 1);
+                saveToLocalStorage();
+                loadMapMarkers();
+                renderNotesGrid();
+                updateNotesList();
+            }
+        };
+        notePopup.style.display = 'block';
+    }
+    
+    function showAddNoteDialog(latlng) {
+        const title = prompt('📌 Enter note title:');
+        if (!title) return;
+        const content = prompt('📝 Enter note content:');
+        if (!content) return;
+        const note = {
+            id: Date.now(),
+            title,
+            content,
+            image: null,
+            date: new Date().toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric'
+            }),
+            timestamp: Date.now(),
+            location: {
+                lat: latlng.lat,
+                lng: latlng.lng
+            }
+        };
+        notes.unshift(note);
+        saveToLocalStorage();
+        loadMapMarkers();
+        renderNotesGrid();
+        updateNotesList();
+        alert(`✅ Note saved at location!\n📍 ${latlng.lat.toFixed(4)}, ${latlng.lng.toFixed(4)}`);
+    }
+    
     // Event Listeners
     newNoteMainBtn.addEventListener('click', () => openNotePanelForNew());
     viewNotesMainBtn.addEventListener('click', () => scrollToNotes());
+    viewMapBtn.addEventListener('click', showMapPanel);
     removeAllNotesBtn.addEventListener('click', removeAllNotes);
-    backHomeBtn.addEventListener('click', showHomeView);
     closePanelBtn.addEventListener('click', showHomeView);
+    closeMapBtn.addEventListener('click', showHomeView);
+    currentLocationBtn.addEventListener('click', goToCurrentLocation);
+    addNoteMapBtn.addEventListener('click', () => {
+        if (currentLocationMarker && currentLocationMarker.getLatLng) {
+            showAddNoteDialog(currentLocationMarker.getLatLng());
+        } else {
+            alert('Please enable location services first.');
+        }
+    });
     newNoteBtn.addEventListener('click', openNotePanelForNew);
     saveNoteBtn.addEventListener('click', saveNote);
     deleteNoteBtn.addEventListener('click', deleteCurrentNote);
@@ -75,22 +228,68 @@ document.addEventListener('DOMContentLoaded', function() {
     prevNoteBtn.addEventListener('click', showPreviousNote);
     nextNoteBtn.addEventListener('click', showNextNote);
     
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.note-popup') && !event.target.closest('#addNoteMapBtn')) {
+            notePopup.style.display = 'none';
+        }
+    });
+    
     // Image Upload
     noteImageFrame.addEventListener('click', () => noteImageInput.click());
     noteImageInput.addEventListener('change', handleImageUpload);
     
     // Functions
     function showHomeView() {
+        console.log('🏠 Going back to home view');
         homeView.classList.add('active');
         notePanel.classList.remove('active');
+        mapPanel.classList.remove('active');
         isEditing = false;
         updateEditButton();
         renderNotesGrid();
+        notePopup.style.display = 'none';
     }
     
     function showNotePanel() {
         homeView.classList.remove('active');
         notePanel.classList.add('active');
+        mapPanel.classList.remove('active');
+    }
+    
+    function showMapPanel() {
+        homeView.classList.remove('active');
+        notePanel.classList.remove('active');
+        mapPanel.classList.add('active');
+        setTimeout(() => {
+            if (!map) {
+                initMap();
+            }
+            map.invalidateSize();
+        }, 100);
+    }
+    
+    function goToCurrentLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                if (!currentLocationMarker) {
+                    currentLocationMarker = L.circleMarker([lat, lng], {
+                        radius: 8,
+                        fillColor: "#2196F3",
+                        color: "#1976D2",
+                        weight: 2,
+                        opacity: 0.8,
+                        fillOpacity: 0.6
+                    }).addTo(map).bindPopup('📍 Your Location');
+                } else {
+                    currentLocationMarker.setLatLng([lat, lng]);
+                }
+                map.setView([lat, lng], 19);
+            }, function() {
+                alert('Unable to get your location.');
+            });
+        }
     }
     
     function openNotePanelForNew() {
@@ -178,6 +377,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 month: 'short',
                 day: 'numeric'
             }),
+            createdAt: new Date().toISOString(),
             timestamp: Date.now()
         };
         
@@ -327,13 +527,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 ? `<img src="${note.image}" alt="${note.title}">`
                 : '<i class="fas fa-sticky-note"></i>';
             
+            // Format date and time
+            let dateDisplay = note.date || '';
+            if (note.createdAt) {
+                const date = new Date(note.createdAt);
+                dateDisplay = date.toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'short', 
+                    day: 'numeric', 
+                    hour: '2-digit', 
+                    minute: '2-digit'
+                });
+            }
+            
             noteCard.innerHTML = `
                 <div class="note-card-image">
                     ${imageHtml}
                 </div>
                 <div class="note-card-content">
                     <h3 class="note-card-title">${note.title}</h3>
-                    <div class="note-card-date">${note.date}</div>
+                    <div class="note-card-date">${dateDisplay}</div>
                 </div>
             `;
             
