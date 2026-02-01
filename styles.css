@@ -19,264 +19,6 @@ body {
     background-image: none;
 }
 
-/* Login Modal Styles */
-.login-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9999;
-    backdrop-filter: blur(5px);
-}
-
-.login-modal.hidden {
-    display: none;
-}
-
-.login-container {
-    background: white;
-    border-radius: 15px;
-    padding: clamp(30px, 8vw, 50px);
-    width: clamp(300px, 90vw, 450px);
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    animation: slideUp 0.4s ease-out;
-}
-
-.login-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.login-header h2 {
-    color: #016dd9;
-    font-size: clamp(1.5rem, 4vw, 2rem);
-    margin-bottom: 10px;
-}
-
-.login-header p {
-    color: #666;
-    font-size: 0.95rem;
-}
-
-.login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
-
-.key-input {
-    padding: clamp(12px, 3vw, 15px);
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-}
-
-.key-input:focus {
-    outline: none;
-    border-color: #016dd9;
-    background-color: #f0f7ff;
-    box-shadow: 0 0 0 3px rgba(1, 109, 217, 0.1);
-}
-
-.login-btn {
-    padding: clamp(12px, 3vw, 15px);
-    background-color: #016dd9;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.login-btn:hover {
-    background-color: #0155a8;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(1, 109, 217, 0.3);
-}
-
-.login-btn:active {
-    transform: translateY(0);
-}
-
-.login-footer {
-    text-align: center;
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: 10px;
-}
-
-.login-footer a {
-    color: #016dd9;
-    text-decoration: none;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.login-footer a:hover {
-    text-decoration: underline;
-}
-
-/* Developer Modal Styles */
-.dev-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 9998;
-    backdrop-filter: blur(5px);
-}
-
-.dev-modal.hidden {
-    display: none !important;
-}
-
-.dev-container {
-    background: white;
-    border-radius: 15px;
-    padding: clamp(30px, 8vw, 40px);
-    width: clamp(300px, 90vw, 600px);
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    animation: slideUp 0.4s ease-out;
-}
-
-.dev-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-    padding-bottom: 15px;
-    border-bottom: 2px solid #e0e0e0;
-}
-
-.dev-header h2 {
-    color: #016dd9;
-    font-size: clamp(1.5rem, 4vw, 1.8rem);
-    margin: 0;
-}
-
-.dev-close {
-    background: none;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
-    color: #999;
-    padding: 0;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: color 0.3s ease;
-}
-
-.dev-close:hover {
-    color: #016dd9;
-}
-
-.dev-content {
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-}
-
-.dev-section {
-    padding: 15px;
-    background: #f9f9f9;
-    border-radius: 8px;
-    border-left: 4px solid #016dd9;
-}
-
-.dev-section h3 {
-    color: #016dd9;
-    font-size: 1rem;
-    margin-bottom: 12px;
-}
-
-.dev-btn {
-    padding: 10px 20px;
-    background-color: #016dd9;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    width: 100%;
-}
-
-.dev-btn:hover {
-    background-color: #0155a8;
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(1, 109, 217, 0.3);
-}
-
-.dev-btn.delete-btn {
-    background-color: #dc3545;
-}
-
-.dev-btn.delete-btn:hover {
-    background-color: #c82333;
-}
-
-.generated-key {
-    margin-top: 12px;
-    padding: 12px;
-    background: white;
-    border: 2px solid #016dd9;
-    border-radius: 6px;
-    font-family: 'Courier New', monospace;
-    word-break: break-all;
-    min-height: 40px;
-    display: flex;
-    align-items: center;
-    font-weight: 600;
-    color: #016dd9;
-}
-
-.keys-list {
-    list-style: none;
-    max-height: 200px;
-    overflow-y: auto;
-}
-
-.keys-list li {
-    padding: 10px;
-    background: white;
-    border-radius: 6px;
-    margin-bottom: 8px;
-    font-family: 'Courier New', monospace;
-    font-size: 0.85rem;
-    border-left: 3px solid #28a745;
-    word-break: break-all;
-}
-
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
 #container {
     display: none;
 }
@@ -384,6 +126,7 @@ h1 {
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    position: relative;
 }
 
 .image-frame {
@@ -493,6 +236,11 @@ h1 {
     margin: 0;
 }
 
+.button-container {
+
+    margin-top: clamp(25px, 5vw, 40px);
+}
+
 button {
     margin-top: 10px;
     height: clamp(2.5em, 8vw, 2.8em);
@@ -505,6 +253,7 @@ button {
     color: #016dd9;
     cursor: pointer;
     font-size: clamp(0.9rem, 3vw, 1rem);
+
 }
 
 button:hover {
@@ -1238,6 +987,8 @@ button {
 }
 
 
+
+
 @media (max-width: 480px) {
     body {
         padding-right: 0;
@@ -1363,6 +1114,8 @@ button {
         width: 100%;
         height: 100%;
     }
+
+
 }
 
 @media (max-width: 360px) {
@@ -1410,4 +1163,147 @@ button {
         padding: 8px 10px;
         font-size: 0.9rem;
     }
+}
+
+/* Updated Cat Animation - Made Bigger and with Collision Detection */
+.RunAnimationCat {
+    width: 109px;
+    height: 128px;
+    background-image: url("Sprites/RUN.png");
+    background-size: 1024px 128px;
+    animation: run 0.600s steps(8) infinite;
+    position: absolute;
+    top: -90px;
+    left: 0;
+    z-index: 10;
+    margin-left: 50px;
+    transform: scaleX(1);
+
+    /* ADD THESE 3 LINES TO FIX BLURRINESS - NOTHING ELSE CHANGES */
+    image-rendering: -moz-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+.RunAnimationCat.flip {
+    transform: scaleX(-1);
+}
+
+@keyframes run {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: -1024px 0;
+    }
+}
+
+/* Remove left padding on phone screens */
+@media (max-width: 768px) {
+
+    /* Adjust breakpoint as needed */
+    .RunAnimationCat {
+        margin-left: 0;
+        /* Remove the -10px offset on phones */
+    }
+}
+
+/* Idle Cat Animation for Map Markers */
+.IdleCatMarker {
+    width: 64px;
+    /* Smaller for map markers */
+    height: 64px;
+    background-image: url("Sprites/IDLE.png");
+    /* You'll need to add this sprite */
+    background-size: 512px 64px;
+    /* Assuming 8 frames of 64x64 */
+    animation: idle 1.5s steps(8) infinite;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    pointer-events: none;
+    /* Don't interfere with marker clicks */
+    z-index: 1000;
+}
+
+@keyframes idle {
+    from {
+        background-position: 0 0;
+    }
+
+    to {
+        background-position: -512px 0;
+    }
+}
+
+/* Leaflet Marker with Cat Container */
+.marker-with-cat {
+    position: relative;
+    display: inline-block;
+
+}
+
+.marker-with-cat .cat-container {
+    position: absolute;
+    right: -80px;
+    /* Position to the right of the pin */
+    bottom: 0;
+    width: 64px;
+    height: 64px;
+    pointer-events: none;
+}
+
+/* Custom Leaflet Marker Icon */
+.custom-marker-icon {
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.custom-marker-icon .marker-with-cat svg {
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+/* Container for cat and title */
+.title-with-cat {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: clamp(15px, 4vw, 20px);
+    gap: 20px;
+    margin-right: 90px;
+    /* Add gap between cat and h2 */
+}
+
+/* Position cat on the left with a gap */
+.title-with-cat .RunAnimationCat {
+    position: relative;
+    /* Change from absolute to relative */
+    top: 0;
+    left: 0;
+    transform: translateY(0) scaleX(1);
+    /* Remove vertical transform */
+
+    /* Your existing cat styles */
+    width: 109px;
+    height: 128px;
+    background-image: url("Sprites/IDLE.png");
+    background-size: 1024px 128px;
+    animation: run 0.600s steps(8) infinite;
+    z-index: 10;
+
+    /* Anti-blur properties */
+    image-rendering: -moz-crisp-edges;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+}
+
+/* Ensure h2 stays centered with gap */
+.title-with-cat h2 {
+    margin: 0;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #000000;
+    text-align: center;
 }
