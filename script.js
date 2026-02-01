@@ -35,6 +35,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const mapContainer = document.getElementById('map');
     const notePopup = document.getElementById('notePopup');
     
+    // Cat Animation Elements
+    const catElement = document.querySelector('.RunAnimationCat');
+    const imageFrame = document.querySelector('.image-frame');
+    
     // State - Load from localStorage
     let notes = [];
     let currentNoteIndex = -1;
@@ -43,6 +47,52 @@ document.addEventListener('DOMContentLoaded', function() {
     let markers = {};
     let currentLocationMarker = null;
     let selectedLatLng = null;
+    
+    // Cat animation state
+    let catPosition = 0;
+    let catDirection = 1; // 1 for right, -1 for left
+    let catSpeed = 2;
+    
+    // Cat Animation with Collision Detection
+    function animateCat() {
+        if (!catElement || !imageFrame) return;
+        
+        // Use clientWidth to get the actual inner width (excluding borders)
+        const imageFrameWidth = imageFrame.clientWidth;
+        const catWidth = catElement.offsetWidth;
+        
+        // Calculate the maximum position (full width minus cat width)
+        // No padding or margin adjustments needed - runs edge to edge
+        const maxPosition = imageFrameWidth - catWidth;
+        
+        // Update cat position
+        catPosition += catSpeed * catDirection;
+        
+        // Check boundaries with exact precision
+        if (catPosition <= 0) {
+            catPosition = 0;
+            catDirection = 1;
+            catElement.classList.add('flip'); // scaleX(1) - facing right
+        } else if (catPosition >= maxPosition) {
+            catPosition = maxPosition;
+            catDirection = -1;
+            catElement.classList.remove('flip'); // scaleX(-1) - facing left
+        }
+        
+        // Apply position with sub-pixel precision
+        catElement.style.left = catPosition + 'px';
+        
+        requestAnimationFrame(animateCat);
+    }
+    
+    // Start cat animation
+    if (catElement && imageFrame) {
+        // Initialize cat position to start from left
+        catPosition = 0;
+        catDirection = 1;
+        catElement.classList.add('flip'); // Start facing right
+        animateCat();
+    }
     
     // Load notes from localStorage on page load
     function loadNotesFromStorage() {
@@ -111,14 +161,29 @@ document.addEventListener('DOMContentLoaded', function() {
             if (note.location) {
                 const lat = note.location.lat;
                 const lng = note.location.lng;
+                
+                // Create custom HTML for marker with cat
+                const markerHtml = `
+                    <div class="marker-with-cat">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#6A11CB" width="32" height="32">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z"/>
+                        </svg>
+                        <div class="cat-container">
+                            <div class="IdleCatMarker"></div>
+                        </div>
+                    </div>
+                `;
+                
                 const marker = L.marker([lat, lng], {
-                    icon: L.icon({
-                        iconUrl: 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%236A11CB" width="32" height="32"%3E%3Cpath d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-13c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5z"/%3E%3C/svg%3E',
+                    icon: L.divIcon({
+                        className: 'custom-marker-icon',
+                        html: markerHtml,
                         iconSize: [32, 32],
                         iconAnchor: [16, 32],
                         popupAnchor: [0, -32]
                     })
                 }).addTo(map);
+                
                 marker.bindPopup(`<strong>${note.title}</strong><br><p style="font-size: 0.85em; white-space: pre-wrap; max-height: 200px; overflow-y: auto;">${note.content}</p>`);
                 marker.on('click', function() {
                     showNotePopup(note, index);
@@ -534,6 +599,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function updateNotesList() {
+        if (!notesListContainer) return;
+        
         notesListContainer.innerHTML = '';
         
         if (notes.length === 0) {
